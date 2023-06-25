@@ -68,8 +68,10 @@ async function onSubmit(evt) {
       }
     );
   } else {
+    gallery.innerHTML = '';
+    currentPage = 1;
     const photos = response.photos;
-    gallery.innerHTML = createMarkup(photos);
+    gallery.insertAdjacentHTML('beforeend', createMarkup(photos));
     const lightbox = new SimpleLightbox('.gallery a');
     showElement(loadMoreBtn);
   }
@@ -95,7 +97,7 @@ async function loadMore() {
     hideElement(loadMoreBtn);
   } else {
     const photos = response.photos;
-    gallery.innerHTML += createMarkup(photos);
+    gallery.insertAdjacentHTML('beforeend', createMarkup(photos));
     const lightbox = new SimpleLightbox('.gallery a');
   }
 }
