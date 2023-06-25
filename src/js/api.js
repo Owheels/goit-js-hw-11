@@ -14,7 +14,12 @@ export async function getPhotos(inputValue, page) {
       },
     });
 
-    return response.data.hits;
+    const { hits, totalHits } = response.data;
+
+    return {
+      photos: hits,
+      totalHits: totalHits,
+    };
   } catch (error) {
     console.log(error);
   }

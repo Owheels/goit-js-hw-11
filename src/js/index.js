@@ -10,6 +10,9 @@ const formInput = document.querySelector('input');
 const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 let currentPage = 1;
+let totalPages = 0;
+
+hideElement(loadMoreBtn);
 
 function showElement(element) {
   element.style.display = 'block';
@@ -52,12 +55,24 @@ function createMarkup(photos) {
 async function onSubmit(evt) {
   evt.preventDefault();
   let inputValue = encodeURIComponent(formInput.value);
-  const photos = await getPhotos(inputValue, currentPage);
+  const response = await getPhotos(inputValue, currentPage);
 
-  gallery.innerHTML = '';
-
-  gallery.insertAdjacentHTML('beforeend', createMarkup(photos));
-  console.log(inputValue);
+  if (response.photos.length === 0) {
+    Notiflix.Notify.failure(
+      'Sorry, there are no images matching your search query. Please try again.',
+      {
+        width: '500px',
+        timeout: '5000',
+        fontSize: '25px',
+        opacity: 0.7,
+      }
+    );
+  } else {
+    const photos = response.photos;
+    gallery.innerHTML = createMarkup(photos);
+    const lightbox = new SimpleLightbox('.gallery a');
+    showElement(loadMoreBtn);
+  }
 }
 
 loadMoreBtn.addEventListener('click', loadMore);
@@ -65,7 +80,22 @@ loadMoreBtn.addEventListener('click', loadMore);
 async function loadMore() {
   currentPage++;
   let inputValue = encodeURIComponent(formInput.value);
-  const photos = await getPhotos(inputValue, currentPage);
+  const response = await getPhotos(inputValue, currentPage);
 
-  gallery.innerHTML += createMarkup(photos);
+  if (currentPage === Math.ceil(response.totalHits / 40)) {
+    Notiflix.Notify.info(
+      "We're sorry, but you've reached the end of search results.",
+      {
+        width: '500px',
+        timeout: '5000',
+        fontSize: '25px',
+        opacity: 0.7,
+      }
+    );
+    hideElement(loadMoreBtn);
+  } else {
+    const photos = response.photos;
+    gallery.innerHTML += createMarkup(photos);
+    const lightbox = new SimpleLightbox('.gallery a');
+  }
 }

@@ -41,8 +41,7 @@ img {
 }
 
 .load-more {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
+  display: block;
+  margin: 20 auto;
+  }
 
