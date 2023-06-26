@@ -54,6 +54,7 @@ function createMarkup(photos) {
 
 async function onSubmit(evt) {
   evt.preventDefault();
+  currentPage = 1;
   let inputValue = encodeURIComponent(formInput.value);
   const response = await getPhotos(inputValue, currentPage);
 
@@ -69,7 +70,6 @@ async function onSubmit(evt) {
     );
   } else {
     gallery.innerHTML = '';
-    currentPage = 1;
     const photos = response.photos;
     gallery.insertAdjacentHTML('beforeend', createMarkup(photos));
     const lightbox = new SimpleLightbox('.gallery a');
