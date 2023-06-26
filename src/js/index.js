@@ -11,6 +11,7 @@ const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 let currentPage = 1;
 let totalPages = 0;
+let lightbox = null;
 
 hideElement(loadMoreBtn);
 
@@ -72,7 +73,7 @@ async function onSubmit(evt) {
     gallery.innerHTML = '';
     const photos = response.photos;
     gallery.insertAdjacentHTML('beforeend', createMarkup(photos));
-    const lightbox = new SimpleLightbox('.gallery a');
+    lightbox = new SimpleLightbox('.gallery a');
     showElement(loadMoreBtn);
   }
 }
@@ -98,6 +99,7 @@ async function loadMore() {
   } else {
     const photos = response.photos;
     gallery.insertAdjacentHTML('beforeend', createMarkup(photos));
-    const lightbox = new SimpleLightbox('.gallery a');
+    lightbox.refresh();
+    gallery.refresh();
   }
 }
