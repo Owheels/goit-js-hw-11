@@ -85,7 +85,12 @@ async function loadMore() {
   let inputValue = encodeURIComponent(formInput.value);
   const response = await getPhotos(inputValue, currentPage);
 
-  if (currentPage === Math.ceil(response.totalHits / 40)) {
+  if (currentPage <= Math.ceil(response.totalHits / 40)) {
+    const photos = response.photos;
+    gallery.insertAdjacentHTML('beforeend', createMarkup(photos));
+    lightbox.refresh();
+    gallery.refresh();
+  } else {
     Notiflix.Notify.info(
       "We're sorry, but you've reached the end of search results.",
       {
@@ -96,10 +101,5 @@ async function loadMore() {
       }
     );
     hideElement(loadMoreBtn);
-  } else {
-    const photos = response.photos;
-    gallery.insertAdjacentHTML('beforeend', createMarkup(photos));
-    lightbox.refresh();
-    gallery.refresh();
   }
 }
